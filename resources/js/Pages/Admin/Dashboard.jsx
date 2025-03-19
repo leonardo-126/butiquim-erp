@@ -33,7 +33,7 @@ export default function Dashboard({ auth }) {
                         <button className="p-6 text-gray-900" onClick={handleClickEstabelecimento}>Criar estabelecimento</button>
                         <button className="p-6 text-gray-900" onClick={handleClickFuncionario}>Criar funcionarioss</button>
                         <button className="p-6 text-gray-900" onClick={handleClickEstabelecimentoIndex}>Meus estabelecimentos</button>
-                        <RegisterMesaecho "# butiquim-erp" >> README.md estabelecimentoId={1}/>
+                        <RegisterMesa estabelecimentoId={1}/>
                         <img src={image} alt="aaaaaaaaaaa" />
                     </div>
                 </div>
