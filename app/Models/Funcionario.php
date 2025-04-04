@@ -20,13 +20,11 @@ class Funcionario extends Model
     ];
 
     // Definir os relacionamentos
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function estabelecimento()
-    {
-        return $this->belongsTo(Estabelecimento::class);
+    public function estabelecimento() {
+        return $this->belongsTo(Estabelecimento::class, 'estabelecimento_id');
     }
 }

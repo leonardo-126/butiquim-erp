@@ -58,4 +58,28 @@ class FuncionarioController extends Controller
         // Retorna uma resposta Inertia com sucesso
         return redirect()->route('admin.dashboard')->with('success', 'Funcionário criado com sucesso!');
     }
+
+    public function index() {
+        $funcionarios = Funcionario::where('user_id', auth()->id())->get();
+
+        return Inertia::render('Admin/Estabelecimento/IndexFuncionarios', [
+            'funcionarios' => $funcionarios,
+        ]);
+    }
+    
+    public function indexApi(){
+        // Busca os estabelecimentos que pertencem ao usuário logado
+        $estabelecimentos = Estabelecimento::where('user_id', auth()->id())->pluck('id');
+    
+        // Busca os funcionários desses estabelecimentos
+        $funcionarios = Funcionario::with(['user', 'estabelecimento'])
+            ->whereIn('estabelecimento_id', $estabelecimentos)
+            ->get();
+    
+        return response()->json([
+            'success' => true,
+            'data' => $funcionarios
+        ]);
+    }
+    
 }

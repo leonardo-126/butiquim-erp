@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Storage;
+use SebastianBergmann\CodeCoverage\Test\TestStatus\Success;
+
+use function PHPUnit\Framework\fileExists;
 
 class MesaController extends Controller
 {
@@ -35,51 +38,81 @@ class MesaController extends Controller
             Log::error('Erro ao gerar QR Code: ' . $e->getMessage());
         }
 
-        // Salva a imagem no disco
+        // Caminho para salvar o QR Code diretamente na pasta `public/qrcodes`
         $qrCodePath = "qrcodes/mesa_$novoNumero.svg";
-        Storage::disk('public')->put($qrCodePath, $qrCodeData);
+        $qrCodeFullPath = public_path($qrCodePath);
 
-        // Cria a mesa
+        // Certifique-se de que a pasta existe
+        if (!file_exists(public_path('qrcodes'))) {
+            mkdir(public_path('qrcodes'), 0777, true);
+        }
+
+        // Salva a imagem no diretório `public/qrcodes`
+        file_put_contents($qrCodeFullPath, $qrCodeData);
+
+        // Cria a mesa no banco de dados
         $mesa = Mesa::create([
             'estabelecimento_id' => $validated['estabelecimento_id'],
             'numero' => $novoNumero,
-            'qr_code_path' => $qrCodePath,
+            'qr_code_path' => $qrCodePath, // Apenas o caminho relativo dentro de `public`
         ]);
 
         return response()->json([
             'message' => 'Mesa criada com sucesso!',
             'mesa' => $mesa,
-            'qr_code_url' => asset("storage/$qrCodePath")
+            'qr_code_url' => asset($qrCodePath) // Retorna a URL acessível
         ]);
     }
     public function indexApi()
     {
-        $mesas = Mesa::with('estabelecimento')->get(); // Inclui o relacionamento se necessário
-
-        // Renderiza o componente com Inertia
-        return Inertia::render('Admin/Estabelecimento/IndexMesas', [
-            'mesas' => $mesas
-        ]);
+        $mesas = Mesa::all()->map(function ($mesa) {
+            return [
+                'id' => $mesa->id,
+                'numero' => $mesa->numero,
+                'qr_code_url' => asset($mesa->qr_code_path),
+            ];
+        });
+    
+        return response()->json(['data' => $mesas]);
     }
 
 
     public function show($id)
     {
-        $mesas = Mesa::all(); // Certifique-se de que isto retorna um array
-        return response()->json($mesas);
+        $mesas = Mesa::with('estabelecimento')->get(); // Inclui o relacionamento se necessário
+
+        // Renderiza o componente com Inertia
+        return response()->json([
+            'success' => true,
+            'data' => $mesas
+        ]);
     }
     public function downloadQrCode($mesaId)
     {
         $mesa = Mesa::findOrFail($mesaId);
+        $qrCodePath = public_path("qrcodes/mesa_{$mesa->numero}.png");
 
-        // Caminho do QR Code no storage público
-        $qrCodePath = "qrcodes/mesa_{$mesa->numero}.png";
-
-        if (Storage::disk('public')->exists($qrCodePath)) {
-            return response()->download(storage_path("app/public/{$qrCodePath}"));
+        if (file_exists($qrCodePath)) {
+            return response()->download($qrCodePath);
         }
 
         return response()->json(['error' => 'QR Code não encontrado.'], 404);
+    }
+
+    public function destroy($mesaId) {
+        $mesa = Mesa::find($mesaId);
+        if(!$mesa) {
+            return response()->json(['error' => 'Mesa não encontrada'], 404);
+        }
+        //remover o qrcode
+        if($mesa->qr_code_path && fileExists(public_path($mesa->qr_code_path))) {
+            unlink(public_path($mesa->qr_code_path));
+        }
+
+        $mesa->delete();
+
+        return response()->json(['message'=> 'Mesa excluida com sucesso!']);
+        
     }
 
 }

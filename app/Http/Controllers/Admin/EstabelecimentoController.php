@@ -67,17 +67,15 @@ class EstabelecimentoController extends Controller
        ]);
     }
     public function show($id) {
-        // Recupera o estabelecimento por ID
         $estabelecimento = Estabelecimento::find($id);
-        
+
         if (!$estabelecimento) {
             abort(404, 'Estabelecimento não encontrado');
         }
-    
-        // Retorna a resposta, você pode retornar uma view ou JSON
-        return response()->json([
-            'success' => true,
-            'data' => $estabelecimento
+
+        // Retorna a página do Inertia para detalhes do estabelecimento
+        return Inertia::render('Admin/Estabelecimento/EstabelecimentoDetails', [
+            'estabelecimento' => $estabelecimento,
         ]);
     }
 }

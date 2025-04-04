@@ -1,9 +1,10 @@
 import axios from "axios";
+import "../../sass/components/RegisterMesa.scss"
 
 export default function RegisterMesa({estabelecimentoId }) {
     const criarMesa = async () => {
         try {
-            const response = await axios.post('admin/estabelecimento/mesa/create', {
+            const response = await axios.post('mesa/create', { //considerar sua rota
                 estabelecimento_id: estabelecimentoId,
             });
 
@@ -17,7 +18,7 @@ export default function RegisterMesa({estabelecimentoId }) {
         }
     };
     return (
-        <button onClick={criarMesa} className="btn btn-primary">
+        <button onClick={criarMesa} className="btn">
             Criar Mesa
         </button>
     )

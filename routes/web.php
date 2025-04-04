@@ -39,12 +39,14 @@ Route::get('/', function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'Dashboard'])->name('admin.dashboard');
     Route::get('/admin/estabelecimento/list', [EstabelecimentoController::class, 'indexApi'])->name('api.admin.estabelecimento.index');
+    Route::get('/admin/funcionarios/list', [FuncionarioController:: class, 'indexApi'])->name('api.admin.funcionarios.index');
     Route::resource('/admin/estabelecimento/funcionarios', FuncionarioController::class);
     Route::resource('/admin/estabelecimento', EstabelecimentoController::class);
     Route::resource('/admin/pedidos', PedidoController::class);
     Route::post('admin/estabelecimento/mesa/create', [MesaController::class, 'create'])->name('admin.mesa.create');
     Route::get('admin/estabelecimento/mesas', [MesaController::class, 'index'])->name('admin.estabelecimento.mesa');
     Route::get('/admin/estabelecimento/mesa/{id}', [MesaController::class, 'show'])->name('admin.mesa.show'); // Mostra detalhes de uma mesa
+    Route::post('/admin/estabelecimento/mesa/{id}', [MesaController::class, 'destroy'])->name('admin.mesa.delete');
     Route::get('/admin/estabelecimento/mesa/{id}/qrcode', [MesaController::class, 'downloadQrCode'])->name('admin.mesa.download'); // Baixa o QR Code
     Route::get('admin/estabelecimento/mesas/list', [MesaController::class, 'indexApi'])->name('admin.mesa.indexApi');
 
