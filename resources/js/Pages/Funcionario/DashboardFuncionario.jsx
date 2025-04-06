@@ -1,9 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 export default function DashboardFuncionario({auth}) {
     const [section, setSection] = useState("home")
+    const [estabelecimento, setEstabelcimento] = useState()
+
         
         const handleClickEstabelecimento = () => {
             window.location.href = 'admin/estabelecimento/create'
@@ -27,7 +30,7 @@ export default function DashboardFuncionario({auth}) {
             <div className="p-4 text-xl font-bold">Dashboard</div>
                 <nav className="flex flex-col space-y-2 p-4 items-start">
                     <button onClick={() => setSection("home")} className="p-2 hover:bg-gray-700 rounded text-left w-full">🏠 Início</button>
-                    <button onClick={() => setSection("createEstabelecimento")} className="p-2 hover:bg-gray-700 rounded text-left w-full">🏢 Criar Estabelecimento</button>
+                    <button onClick={() => setSection("")} className="p-2 hover:bg-gray-700 rounded text-left w-full">🏢 Criar Estabelecimento</button>
                     <button onClick={() => setSection("Funcionario")} className="p-2 hover:bg-gray-700 rounded text-left w-full">👨‍💼 Funcionários</button>
                     <button onClick={() => setSection("estabelecimentos")} className="p-2 hover:bg-gray-700 rounded text-left w-full">📜 Meus Estabelecimentos</button>
                 </nav>

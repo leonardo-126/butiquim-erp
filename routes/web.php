@@ -55,6 +55,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // Rotas do Garçom
 Route::middleware(['auth', 'role:funcionario'])->group(function () {
     Route::get('/funcionario', [GarcomController::class, 'dashboard'])->name('funcionario.dashboard');
+    Route::get('/funcionario/details', [GarcomController::class, 'details'])->name('funcionario.details');
     Route::post('/funcionario/pedido', [GarcomController::class, 'realizarPedido'])->name('funcionario.pedido');
 });
 
