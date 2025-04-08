@@ -1,11 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import Register from '../Auth/Register';
-import RegisterMesa from '../../Components/RegisterMesas';
-import image from '../../../../storage/app/public/qrcodes/mesa_11.svg';
 import { useState } from 'react';
 import EstabelecimentoIndex from './Estabelecimento/EstabelecimentoIndex';
-import RegisterEstabelecimento from './Estabelecimento/RegisterEstabelecimento';
 import IndexFuncionarios from './Estabelecimento/IndexFuncionarios';
 
 export default function Dashboard({ auth }) {

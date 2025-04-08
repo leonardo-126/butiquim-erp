@@ -5,7 +5,9 @@ namespace App\Http\Controllers\funcionario;
 use App\Http\Controllers\Controller;
 use App\Models\Estabelecimento;
 use App\Models\Funcionario;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class GarcomController extends Controller
@@ -19,19 +21,20 @@ class GarcomController extends Controller
         return Inertia::render('Funcionario/DashboardFuncionario', $dados);
     }
     public function details(){
-        //buscar o estabelecimento com os details 
-        $estabelecimento = Estabelecimento::where('user_id', auth()->id())->pluck('id');
-        dd($estabelecimento);
-        //buscar os dados do usuario
-        $funcionario = Funcionario::with(['user', 'estabelecimento'])
-            ->whereIn('estabelecimento_id', $estabelecimento)
-            ->get();
 
+        $user = Auth::id();
+        //pega o usuario
+        $funcionarios = Funcionario::where('user_id', $user)->first();
+        //pega o estabelecimento
+        $estabelecimento = Estabelecimento::where('id', $funcionarios->estabelecimento_id)->first();
 
+        $usuario = User::where('id', $funcionarios->user_id)->first();
+        
         //retornar os dados por api
         return response()->json([
-            'sucess' => true,
-            'data' => $funcionario
+            'funcionario' => $funcionarios,
+            'user' => $usuario,
+            'estabelecimento' => $estabelecimento
         ]);
     }
 }

@@ -75,6 +75,7 @@ class FuncionarioController extends Controller
         $funcionarios = Funcionario::with(['user', 'estabelecimento'])
             ->whereIn('estabelecimento_id', $estabelecimentos)
             ->get();
+
     
         return response()->json([
             'success' => true,
