@@ -78,4 +78,9 @@ class EstabelecimentoController extends Controller
             'estabelecimento' => $estabelecimento,
         ]);
     }
+    public function CadastrarItem($id){
+        $estabelecimento = Estabelecimento::find($id);
+
+
+    }
 }

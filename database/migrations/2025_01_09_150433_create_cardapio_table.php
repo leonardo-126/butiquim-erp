@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nome');
             $table->text('descricao');
             $table->decimal('preco', 10, 2);
+            $table->string('path')->nullable();  // Adiciona a coluna 'path' para salvar o caminho da imagem
             $table->timestamps();
 
             $table->foreign('estabelecimento_id')->references('id')->on('estabelecimentos')->onDelete('cascade');

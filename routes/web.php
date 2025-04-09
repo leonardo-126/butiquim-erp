@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CardapioController as AdminCardapioController;
 use App\Http\Controllers\admin\EstabelecimentoController;
 use App\Http\Controllers\Admin\FuncionarioController;
 use App\Http\Controllers\Admin\MesaController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\CardapioController;
 use App\Http\Controllers\funcionario\GarcomController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Estabelecimento;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,10 +41,15 @@ Route::get('/', function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'Dashboard'])->name('admin.dashboard');
     Route::get('/admin/estabelecimento/list', [EstabelecimentoController::class, 'indexApi'])->name('api.admin.estabelecimento.index');
-    Route::get('/admin/funcionarios/list', [FuncionarioController:: class, 'indexApi'])->name('api.admin.funcionarios.index');
-    Route::resource('/admin/estabelecimento/funcionarios', FuncionarioController::class);
-    Route::resource('/admin/estabelecimento', EstabelecimentoController::class);
-    Route::resource('/admin/pedidos', PedidoController::class);
+    // ROTAS DE FUNCIONÁRIOS
+    Route::get('/admin/funcionarios/list', [FuncionarioController::class, 'indexApi'])->name('api.admin.funcionarios.index');
+    Route::post('/admin/estabelecimento/funcionarios', [FuncionarioController::class, 'store'])->name('admin.estabelecimento.funcionarios.store');
+    Route::get('/admin/estabelecimento/funcionarios/create', [FuncionarioController::class, 'create'])->name('admin.estabelecimento.funcionarios.create');
+    // ROTAS DE ESTABELECIMENTO
+    Route::get('/admin/estabelecimento/create', [EstabelecimentoController::class, 'create'])->name('admin.estabelecimento.create');
+    Route::post('/admin/estabelecimento/store', [EstabelecimentoController::class, 'store'])->name('admin.estabelecimento.store');
+    Route::post('/admin/estabelecimento/cardapio', [AdminCardapioController::class, 'store'])->name('admin.estabelecimento.cardapio.store');
+    Route::get('/admin/estabelecimento/{id}', [EstabelecimentoController::class, 'show'])->name('admin.estabelecimento.show');
     Route::post('admin/estabelecimento/mesa/create', [MesaController::class, 'create'])->name('admin.mesa.create');
     Route::get('admin/estabelecimento/mesas', [MesaController::class, 'index'])->name('admin.estabelecimento.mesa');
     Route::get('/admin/estabelecimento/mesa/{id}', [MesaController::class, 'show'])->name('admin.mesa.show'); // Mostra detalhes de uma mesa

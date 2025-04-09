@@ -18,7 +18,7 @@ export default function RegisterFuncionario ({auth}) {
     const submit = (e) => {
         e.preventDefault();
         console.log(data)
-        post(route('funcionarios.store')); 
+        post(route('admin.estabelecimento.funcionarios.store'));
     };
 
 

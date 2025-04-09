@@ -37,6 +37,10 @@ class Estabelecimento extends Model
     {
         return $this->hasMany(Funcionario::class);
     }
+    public function cardapios()
+    {
+        return $this->hasMany(Cardapio::class);
+    }
 
     /**
      * Relacionamento com mesas.
