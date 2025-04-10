@@ -21,7 +21,7 @@ export default function RegisterEstabelecimento ({auth}) {
     const submit = (e) => {
         e.preventDefault();
         console.log(data)
-        post(route('estabelecimento.store'));
+        post(route('admin.estabelecimento.store'));
     };
     return (
         <AuthenticatedLayout

@@ -48,8 +48,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // ROTAS DE ESTABELECIMENTO
     Route::get('/admin/estabelecimento/create', [EstabelecimentoController::class, 'create'])->name('admin.estabelecimento.create');
     Route::post('/admin/estabelecimento/store', [EstabelecimentoController::class, 'store'])->name('admin.estabelecimento.store');
-    Route::post('/admin/estabelecimento/cardapio', [AdminCardapioController::class, 'store'])->name('admin.estabelecimento.cardapio.store');
     Route::get('/admin/estabelecimento/{id}', [EstabelecimentoController::class, 'show'])->name('admin.estabelecimento.show');
+    
+    Route::post('/admin/estabelecimento/cardapio', [AdminCardapioController::class, 'store'])->name('admin.estabelecimento.cardapio.store');
+    Route::get('/admin/estabelecimento/{id}/cardapio', [AdminCardapioController::class, 'index'])->name('admin.estabelecimento.cardapio.list');
+    
+    
+    
     Route::post('admin/estabelecimento/mesa/create', [MesaController::class, 'create'])->name('admin.mesa.create');
     Route::get('admin/estabelecimento/mesas', [MesaController::class, 'index'])->name('admin.estabelecimento.mesa');
     Route::get('/admin/estabelecimento/mesa/{id}', [MesaController::class, 'show'])->name('admin.mesa.show'); // Mostra detalhes de uma mesa

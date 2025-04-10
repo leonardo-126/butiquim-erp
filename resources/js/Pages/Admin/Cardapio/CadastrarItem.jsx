@@ -1,15 +1,31 @@
 import { useForm } from '@inertiajs/react';
 import '../../../../sass/pages/Admin/Cardapio/CadastrarItem.scss'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function CadastrarItem() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        estabelecimento_id: 1,
+        estabelecimento_id: '',
         nome: '',
         descricao: '',
         preco: '',
         path: null,
       });
+
+      const [estabelecimentos, setEstabelecimentos] = useState([])
+
+      useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/admin/estabelecimento/list');
+                setEstabelecimentos(res.data.data);
+            } catch (error) {
+                console.error('Erro ao buscar dados do funcionário:', error);
+            }
+        };
+
+          fetchData();
+      }, []);
     
       const [preview, setPreview] = useState(null);
     
@@ -74,6 +90,17 @@ export default function CadastrarItem() {
               onChange={handleChange}
             />
             {errors.preco && <div className="error-message">{errors.preco}</div>}
+          </div>
+          <div>
+            <label htmlFor="estabelecimento_id">Estabelecimento: </label>
+            <select name="estabelecimento_id" value={data.estabelecimento_id} onChange={handleChange}>
+              <option value="">Selecione um estabelecimento</option>
+              {estabelecimentos.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nome}
+                </option>
+              ))}
+            </select>
           </div>
   
           <div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cardapio;
+use App\Models\Estabelecimento;
 use Illuminate\Http\Request;
 
 class CardapioController extends Controller
@@ -36,5 +37,23 @@ class CardapioController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Item do cardápio criado com sucesso!');
+    }
+
+    public function index($id) {
+
+        $estabelecimento = Estabelecimento::with('cardapios')->find($id);
+
+        // Se o estabelecimento não for encontrado
+        if (!$estabelecimento) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Estabelecimento não encontrado',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $estabelecimento->cardapios
+        ]);
     }
 }

@@ -6,6 +6,9 @@ import "../../../../sass/pages/Admin/Estabelecimento/estabelecimentoDetails.scss
 
 export default function EstabelecimentoDetails({estabelecimento}) {
     const [mesas, setMesas] = useState([])
+    const [cardapio, setCardapio] = useState([])
+
+
     useEffect(() => {
         axios.get('mesas/list')
         .then(response => {
@@ -15,6 +18,19 @@ export default function EstabelecimentoDetails({estabelecimento}) {
             console.log('Erro ao carregar os mesas' , error);
         })
     },[])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get(`/admin/estabelecimento/${estabelecimento.id}/cardapio`);
+                setCardapio(res.data.data);
+            } catch (error) {
+                console.error('Erro ao buscar dados do funcionário:', error);
+            }
+        };
+
+          fetchData();
+      }, []);
 
     const handleDownload = (qrCodeUrl) => {
         const link = document.createElement("a");
@@ -60,6 +76,24 @@ export default function EstabelecimentoDetails({estabelecimento}) {
                             <button className="delete-btn" onClick={() => handleDelete(qr.id)}>Excluir</button>
                         </div>
                     </div>
+                ))}
+            </div>
+            <div className="cardapio-list">
+                {cardapio.map((item) => (
+                <li key={item.id} className="cardapio-item">
+                    <div className="cardapio-image">
+                    <img
+                        src={`/assets/${item.path}`}// Caminho para a imagem
+                        alt={item.nome}
+                    />
+                    </div>
+                    <div className="cardapio-info">
+                    <h2>{item.nome}</h2>
+                    <p>{item.descricao}</p>
+                    <p className="preco">Preço: R${item.preco}</p>
+                    <p className="data">Criado em: {new Date(item.created_at).toLocaleString()}</p>
+                    </div>
+                </li>
                 ))}
             </div>
         </section>
